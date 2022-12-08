@@ -9,5 +9,5 @@ More interestingly, since the bot supports GPT3 and Command Injection, the bot c
 
 The bot is Hosted on (pings) a Flask server, which keep's its instance alive. The Flask server itself hosts the GPT3 connection, and operates a website that can handle GPT3 queries in a text-entry box.  
 
-
+## .env file not included in repo because it contains my authentication tokens
 
