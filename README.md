@@ -1,4 +1,4 @@
-# discord-OpenAI-autobot
+# OpenAI-discord-autobot
 
 This repo contains a Discord Bot that can code itself.  It is written in Python and implements the OpenAI Davinci-003 Natural Language Model, better known as GPT3. Message sent in Discord chat beggining with "/" call bot commands.  
 
