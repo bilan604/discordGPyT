@@ -2,7 +2,7 @@
 
 This repo contains a Discord Bot/AI that can answer questions in Discord with responses from GPT3's newest language model (chatGPT), and it can also code itself with a command injection check bypass.
 
-![altext](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?raw=true)
+![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?raw=true)
 
 ## App.py
 The bot and bot commands. Message sent in Discord chat beggining with "/" call bot commands.  
