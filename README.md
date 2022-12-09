@@ -4,7 +4,7 @@ This repo contains a Discord Bot/AI that can answer questions in Discord with re
 
 ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png =300x)  
 
-![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png width=200px)  
+![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?width=200px)  
 
 ## App.py
 The bot and bot commands. Message sent in Discord chat beggining with "/" call bot commands.  
