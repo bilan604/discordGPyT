@@ -1,6 +1,6 @@
 # OpenAI-discord-autobot
 
-This repo contains a Discord Bot/AI that can answer questions in Discord with responses from GPT3's newest language model (chatGPT), and it can also code itself with a command injection check bypass.
+This repo contains a Discord Bot/AI that can answer questions in Discord with responses from GPT3's newest language model (chatGPT), and it can also code itself with a command injection check bypass (generateCommands function).
 
 ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?width=20px)  
 
