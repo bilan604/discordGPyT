@@ -38,6 +38,11 @@ def OpenAIServer():
       result = request.args.get("result")  # pointer to HTML element to modify
       return render_template("index.html", result=result)  # re-renders the element
   
+  def generate_response(query):
+      return empty_prompt.format(
+          query.capitalize()
+      )
+  
   def run():
     print("Flask App runing")
     app.run(
@@ -51,11 +56,7 @@ def OpenAIServer():
   	'''
     t = Thread(target=run)
     t.start()
-  
-  def generate_response(query):
-      return empty_prompt.format(
-          query.capitalize()
-      )
+
 
 def askOpenAI(query):
   global app, openai
