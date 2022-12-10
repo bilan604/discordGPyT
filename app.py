@@ -14,7 +14,7 @@ import tracemalloc
 tracemalloc.start()
 
 
-intents =  intents = discord.Intents(messages=True, guilds=True)
+intents = intents = discord.Intents(messages=True, guilds=True)
 intents.reactions = True
 
 global bot
@@ -54,7 +54,7 @@ async def intro(ctx):
   introduction = "Hi, I named myself Daisy. I am a Python bot being hosted on a Flask server that\
     interacts with the OpenAI API key. I can execute various commands, execute code written in the\
     Discord chat, and respond to questions/requests with OpenAI's Davinci-003 Natural Language Model.\
-    I can also inject commands with the code execution, and code myself"
+    I can also inject commands utilizing an a async injected command check bypass, and thus code myself"
   await ctx.send(introduction)
 
 @bot.command()
@@ -97,7 +97,6 @@ async def replacePattern(ctx, *kwargs):
 
 @bot.command()
 async def executeCode(ctx, *, kwargs):
-  # what Leetcode does to a Software Developer: Observe
   global ans
   global s, s1, s2
   global dd, dd1, dd2
@@ -109,7 +108,7 @@ async def executeCode(ctx, *, kwargs):
 
 @bot.command()
 async def dc(ctx, *, kwargs):
-  # delete code
+  # deletes code
   with open("code.txt", "w+") as f:
     pass
 
@@ -120,7 +119,7 @@ async def al(ctx, *, kwargs):
 
 @bot.command()
 async def vc(ctx):
-  # view code
+  # views code
   with open("code.txt", "r") as f:
     await ctx.send("".join(f.readlines()))
 
@@ -144,8 +143,9 @@ async def dice(ctx):
   await ctx.send(randint(1,6))
 
 @bot.command()
-async def OpenAI(ctx, *, kwargs):
+async def AI(ctx, *, kwargs):
   response = askOpenAI(kwargs)
+  print(response)
   await ctx.send(response)
 
 @bot.command()
@@ -239,20 +239,10 @@ async def translate(ctx, *, kwargs):
 global command_names
 command_names = [command.name for command in list(bot.commands)]
 
-extensions = [
-	'cogs.cog_example'
-]
-
 
 if __name__ == '__main__':
-  for extension in extensions:
-    bot.load_extension(extension)
-
-
-# Starts a webserver to be pinged
-OpenAIServer()
-
-load_dotenv()
-bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
-bot.run(bot_token)
+  OpenAIServer()
+  load_dotenv()
+  bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
+  bot.run(bot_token)
 

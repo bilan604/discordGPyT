@@ -1,11 +1,14 @@
 import os
 import random
+from dotenv import load_dotenv
 
 import openai
 
 from threading import Thread
-from flask import Flask, redirect, render_template, request, url_for
-from dotenv import load_dotenv
+from flask import Flask , request
+from flask import redirect
+from flask import render_template, url_for
+
 
 
 def OpenAIServer():  
@@ -14,8 +17,11 @@ def OpenAIServer():
 
   load_dotenv()
   openai.api_key = os.getenv("OPENAI_API_KEY")
-  print("App created")
   
+  print("App created!")
+  
+  empty_prompt = """{}"""
+
   @app.route("/", methods=("GET", "POST"))
   def index():
       if request.method == "POST":
@@ -33,9 +39,8 @@ def OpenAIServer():
       result = request.args.get("result")  # pointer to HTML element to modify
       return render_template("index.html", result=result)  # re-renders the element
   
-  
   def run():
-    print("----Flask App run() function run")
+    print("Flask App runing")
     app.run(
   		host='0.0.0.0',
   		port=random.randint(2000,9000)
@@ -43,27 +48,23 @@ def OpenAIServer():
   
   def OpenAIServer():
     '''
-  	Creates and starts new thread that runs the function run.
-    Keeps the bot alive by continueously pinging
+    Keeps the bot online by continueously pinging
   	'''
     t = Thread(target=run)
     t.start()
   
-  prompt_general = """{}"""
-  
-  
   def generate_response(query):
-      return prompt_general.format(
+      return empty_prompt.format(
           query.capitalize()
       )
-  
+
 def askOpenAI(query):
-  # text-davinci-002
   global app, openai
   response = openai.Completion.create(
               model="text-davinci-003",
               prompt=query,
-              temperature=0.5,
-              max_tokens=800
+              temperature=0.6,
+              max_tokens=1200
             )
   return response.choices[0].text
+
