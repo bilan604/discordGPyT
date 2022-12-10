@@ -10,7 +10,6 @@ from flask import redirect
 from flask import render_template, url_for
 
 
-
 def OpenAIServer():  
   global app
   app = Flask(__name__)
