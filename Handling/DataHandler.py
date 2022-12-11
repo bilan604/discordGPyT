@@ -4,11 +4,11 @@ import pandas as pd
 class DB:
 
     def __init__(self):
-        self.path = 'Handler/db.txt'
+        self.path = 'handler/db.txt'
         self.table = {}
         self.load_table()
         
-        self.code = 'Handler/code.txt'
+        self.code = 'handler/code.txt'
         self.code = ""
         self.load_code()
     
@@ -26,7 +26,7 @@ class DB:
             self.code = "\n".join(f.readlines())
     
     def add_line(self, line):
-        with open("Handler/code.txt", "a+") as f:
+        with open(self.code, "a+") as f:
             f.write(line + "\n")
 
     def get_code(self):
@@ -34,11 +34,8 @@ class DB:
         return self.code
 
     def delete_code(self):
-        with open("Handler/code.txt", "a+") as f:
+        with open(self.code, "a+") as f:
             pass
-
-    
-
 
     def logMessage(self, row):
         with open(self.path, "a+") as f:
