@@ -7,9 +7,9 @@ from discord.ext import commands
 from hosting.FlaskServer import OpenAIServer
 from hosting.FlaskServer import askOpenAI
 
-from Handling.DataHandler import DB
-from Handling.utilities import convertWord
-from Handling.utilities import checkCode
+from handling.DataHandler import DB
+from handling.utilities import convertWord
+from handling.utilities import checkCode
 
 from dotenv import load_dotenv
 load_dotenv()
