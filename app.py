@@ -169,7 +169,6 @@ async def addCommands(ctx, *, kwargs):
     await python(ctx, code)
     await ctx.send("Commands Added")
 
-
 @bot.command()
 async def generateCommands(ctx):
   raw_query = "Please name and describe 3 useful Commands that a Discord bot implementing the OpenAI API key\
@@ -185,7 +184,6 @@ async def generateCommands(ctx):
   await python(ctx, code)
   await ctx.send("Commands Added")
     
-
 
 """
 #########################################################
