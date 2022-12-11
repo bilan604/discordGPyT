@@ -177,9 +177,9 @@ async def python(ctx, s):
 
 @bot.command()
 async def addCommands(ctx, *, kwargs):
-    global command_names
+    global bot_commands
     kwargs += "Do not name the commands you write any of the following names (" + \
-      ",".join(command_names) + ")"
+      ",".join(list(bot_commands.keys())) + ")"
     code = askOpenAI(kwargs)
     await ctx.send("The code OpenAI wrote:\n" + code)
     await python(ctx, code)
@@ -262,10 +262,6 @@ async def commands(ctx):
     command_list = [command.name for command in bot.commands]
     await ctx.send('Commands: ' + ', '.join(command_list))
 
-
-global command_names
-command_names = [command.name for command in list(bot.commands)]
-print(command_names)
 
 global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}

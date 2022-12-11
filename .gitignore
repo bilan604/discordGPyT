@@ -1,2 +1,4 @@
 /.env
-dead_code.py
+/dead_code.py
+dead_code
+*dead_code.py
