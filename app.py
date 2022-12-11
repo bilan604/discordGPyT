@@ -14,7 +14,10 @@ import tracemalloc
 tracemalloc.start()
 
 
-intents = intents = discord.Intents(messages=True, guilds=True)
+intents = discord.Intents(
+  messages=True,
+  guilds=True
+)
 intents.reactions = True
 
 global bot
@@ -33,7 +36,7 @@ async def on_ready():
 
 """
 #########################################################
-Bot Commands
+Bot Commands:
 #########################################################
 """
 @bot.command()
@@ -78,20 +81,23 @@ async def areEqual(ctx, a, b):
 
 @bot.command()
 async def replacePattern(ctx, *kwargs):
-  await ctx.send(kwargs)
+
   if len(kwargs) == 1:
     await ctx.send("No words")
     return
   pattern = kwargs[0]
   words = []
+
   for i in range(1, len(kwargs)):
     words.append(kwargs[i])
 
   pattern = convertWord(pattern)
   matched_words = []
+
   for i in range(len(words)):
     if pattern == convertWord(words[i]):
       matched_words.append(words[i])
+
   await ctx.send("Here are the words that matches pattern" + kwargs[0])
   await ctx.send(matched_words)
 
@@ -130,6 +136,7 @@ async def rc(ctx):
   global dd, dd1, dd2
   global lst, lst1, lst2
   global dd_self
+
   ans = "ans"
   with open("code.txt", "r") as f:
     code_lines = f.readlines()
@@ -151,11 +158,6 @@ async def AI(ctx, *, kwargs):
 @bot.command()
 async def python(ctx, s):
     exec(s)
-
-@bot.command()
-async def commandSelf(ctx):
-    await ctx.send("Hi, I'm a Discord bot! I'm here to help you out with whatever you need. Let's get started with an introduction.\n")
-    await intro(ctx)
 
 @bot.command()
 async def addCommands(ctx, *, kwargs):
@@ -190,6 +192,13 @@ async def generateCommands(ctx):
 OpenAI's Commands
 #########################################################
 """
+
+@bot.command()
+async def commandSelf(ctx):
+    await ctx.send("Hi, I'm a Discord bot! I'm here to help you out\
+    with whatever you need. Let's get started with an introduction.\n")
+    await intro(ctx)
+
 @bot.command()
 async def addCommand(ctx):
     @bot.command()
