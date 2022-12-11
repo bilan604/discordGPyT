@@ -4,11 +4,11 @@ import pandas as pd
 class DB:
 
     def __init__(self):
-        self.path = 'handler/db.txt'
+        self.path = 'handling/db.txt'
         self.table = {}
         self.load_table()
         
-        self.code = 'handler/code.txt'
+        self.code = 'handing/code.txt'
         self.code = ""
         self.load_code()
     

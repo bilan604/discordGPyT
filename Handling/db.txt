@@ -3,3 +3,5 @@ Lan32, /ok, 12/11/2022, 04:14:06
 Lan32, Hi pls log this, 12/11/2022, 04:14:10
 Lan32, /ok, 12/11/2022, 04:30:26
 Lan32, /AI Hi!, 12/11/2022, 04:30:31
+Lan32, /ok, 12/11/2022, 04:48:09
+Lan32, /AI My dead_code.py file is in the same folder as my .gitignore file, what line do I add to my .gitignore file to made the dead_code.py file not upload to the github repository when I made a commit?, 12/11/2022, 04:49:13
