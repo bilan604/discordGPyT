@@ -4,12 +4,12 @@ import openai
 import discord
 from random import randint
 from discord.ext import commands
-from FlaskServer import OpenAIServer
-from FlaskServer import askOpenAI
+from hosting.FlaskServer import OpenAIServer
+from hosting.FlaskServer import askOpenAI
 
-from Handler.DataHandler import DB
-from utilities import convertWord
-from utilities import checkCode
+from Handling.DataHandler import DB
+from Handling.utilities import convertWord
+from Handling.utilities import checkCode
 
 from dotenv import load_dotenv
 load_dotenv()
