@@ -25,5 +25,6 @@ def checkCode(code):
       s = s.split(" ")[0]
       s_declare = "global " + s.strip()
       newCode.append(s_declare + "\n")
-  return newCode + code
+  code = "".join(newCode + code)
+  return code
       

@@ -1,14 +1,18 @@
 import os
-import discord
+import json
 import openai
-from discord.ext import commands
+import discord
 from random import randint
-from utilities import convertWord
-from utilities import checkCode
+from discord.ext import commands
 from FlaskServer import OpenAIServer
 from FlaskServer import askOpenAI
 
+from Handler.DataHandler import DB
+from utilities import convertWord
+from utilities import checkCode
+
 from dotenv import load_dotenv
+load_dotenv()
 
 import tracemalloc
 tracemalloc.start()
@@ -20,18 +24,35 @@ intents = discord.Intents(
 )
 intents.reactions = True
 
+command_prefix = "/"
+
+
 global bot
 bot = commands.Bot(
   intents=intents,
   author_id = 948372828292521984,
-	command_prefix="/",  # Choose a way to call bot.command() commands
+	command_prefix=command_prefix,  # Choose a way to call bot.command() commands
 	case_insensitive=True  # Commands aren't case-sensitive
 )
+
 
 @bot.event 
 async def on_ready():
     # Prints the bot's username and identifier
     print("@bot.event ready", bot.user, "\n")
+
+@bot.listen()
+async def on_message(message: discord.Message):
+    # if the message is from the bot itself
+    if message.author == bot.user:
+      return
+    
+    # "context determines the purpose of Statistical work"
+    ctx = await bot.get_context(message)
+
+    # otherwise its just a message
+    global db
+    db.addMessage(message)
 
 
 """
@@ -39,6 +60,7 @@ async def on_ready():
 Bot Commands:
 #########################################################
 """
+
 @bot.command()
 async def ok(ctx):
   await ctx.send("Bot is Online!")
@@ -81,7 +103,6 @@ async def areEqual(ctx, a, b):
 
 @bot.command()
 async def replacePattern(ctx, *kwargs):
-
   if len(kwargs) == 1:
     await ctx.send("No words")
     return
@@ -90,7 +111,6 @@ async def replacePattern(ctx, *kwargs):
 
   for i in range(1, len(kwargs)):
     words.append(kwargs[i])
-
   pattern = convertWord(pattern)
   matched_words = []
 
@@ -112,38 +132,34 @@ async def executeCode(ctx, *, kwargs):
   exec(code)
   await ctx.send(ans)
 
+# you don't need comments when you have readability
 @bot.command()
-async def dc(ctx, *, kwargs):
-  # deletes code
-  with open("code.txt", "w+") as f:
-    pass
+async def dc(ctx):
+  db.delete_code()
 
 @bot.command()
 async def al(ctx, *, kwargs):
-  with open("code.txt", "a") as f:
-    f.write(kwargs + "\n")
+  db.add_line(kwargs)
 
 @bot.command()
 async def vc(ctx):
-  # views code
-  with open("code.txt", "r") as f:
-    await ctx.send("".join(f.readlines()))
+  global db
+  code = db.get_code()
+  await ctx.send(code)
 
 @bot.command()
 async def rc(ctx):
   global ans
-  global s, s1, s2
   global dd, dd1, dd2
   global lst, lst1, lst2
-  global dd_self
-
   ans = "ans"
-  with open("code.txt", "r") as f:
-    code_lines = f.readlines()
-    code = "".join(checkCode(code_lines))
-    exec(code)
-    await ctx.send("Code Executed")
-    await ctx.send("ans = " + ans)
+
+  global db
+  code = db.get_code()
+  code = checkCode(code)
+  exec(code)
+  await ctx.send("Code Executed")
+  await ctx.send("ans = " + ans)
 
 @bot.command()
 async def dice(ctx):
@@ -183,7 +199,7 @@ async def generateCommands(ctx):
   await ctx.send("The code OpenAI wrote:\n" + code)
   await python(ctx, code)
   await ctx.send("Commands Added")
-    
+
 
 """
 #########################################################
@@ -223,7 +239,6 @@ async def embed(ctx):
     embed.add_field(name="Field 2", value="This is field 2")
     await ctx.send(embed=embed)
 
-
 @bot.command()
 async def helper(ctx):
     embed = discord.Embed(title="Help", description="These are the commands you can use!", color=0x00ff00)
@@ -242,14 +257,28 @@ async def translate(ctx, *, kwargs):
     output += askOpenAI(output + input)
     await ctx.send(output)
 
+@bot.command()
+async def commands(ctx):
+    command_list = [command.name for command in bot.commands]
+    await ctx.send('Commands: ' + ', '.join(command_list))
+
 
 global command_names
 command_names = [command.name for command in list(bot.commands)]
+print(command_names)
 
+global bot_commands
+bot_commands = {command.name: command for command in list(bot.commands)}
+
+@bot.command()
+async def invokeOK(ctx):
+  for command in list(bot.commands):
+    if command.name == 'ok':
+      await command.invoke(ctx)
 
 if __name__ == '__main__':
-  OpenAIServer()
-  load_dotenv()
+  db = DB()
+  server = OpenAIServer()
   bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
   bot.run(bot_token)
 
