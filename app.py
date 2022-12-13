@@ -17,6 +17,11 @@ load_dotenv()
 import tracemalloc
 tracemalloc.start()
 
+from threading import Thread
+from flask import Flask , request
+from flask import redirect
+from flask import render_template, url_for
+
 
 intents = discord.Intents(
   messages=True,
@@ -173,7 +178,15 @@ async def AI(ctx, *, kwargs):
 
 @bot.command()
 async def python(ctx, s):
-    exec(s)
+  exec(s)
+
+@bot.command()
+async def runApp(ctx):
+  global app
+  app.run()
+  
+  await ctx.send("App ran")
+
 
 @bot.command()
 async def addCommands(ctx, *, kwargs):
@@ -305,9 +318,58 @@ async def invokeOK(ctx):
     if command.name == 'ok':
       await command.invoke(ctx)
 
+
 if __name__ == '__main__':
   db = DB()
-  server = OpenAIServer()
+  """
+  app = OpenAIServer()
+  """
+  #v2:
+  global app
+  app = Flask(__name__)
+  openai.api_key = os.getenv("OPENAI_API_KEY")
+  
+  print("App created!")
+  
+  empty_prompt = """{}"""
+
+  @app.route("/", methods=("GET", "POST"))
+  def index():
+      if request.method == "POST":
+          query = request.form["query"]
+          response = openai.Completion.create(
+              model="text-davinci-002",  # 002
+              prompt=generate_response(query),
+              temperature=0.6,
+              max_tokens=50
+          )
+          print(f"{response.choices=}")
+          return redirect(url_for("index", result=response.choices[0].text))
+  
+      # "GET" request: Update the HTML page to display the response
+      result = request.args.get("result")  # pointer to HTML element to modify
+      return render_template("index.html", result=result)  # re-renders the element
+  
+  def generate_response(query):
+      return empty_prompt.format(
+          query.capitalize()
+      )
+  
+  def run():
+    app.run()
+    print("--Flask App run()--")
+  
+  def Ping():
+    '''
+    Keeps the bot online by continueously pinging
+  	'''
+    t = Thread(target=run)
+    t.start()
+
+  run()
+
+  ############
   bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
   bot.run(bot_token)
+  
 

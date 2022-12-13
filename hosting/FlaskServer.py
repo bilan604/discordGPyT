@@ -11,7 +11,7 @@ from flask import render_template, url_for
 
 
 def OpenAIServer():  
-  global app
+  
   app = Flask(__name__)
 
   load_dotenv()
@@ -44,22 +44,24 @@ def OpenAIServer():
       )
   
   def run():
-    print("Flask App runing")
     app.run(
   		host='0.0.0.0',
   		port=random.randint(2000,9000)
   	)
+    print("--Flask App run()--")
   
-  def OpenAIServer():
+  def Ping():
     '''
     Keeps the bot online by continueously pinging
   	'''
     t = Thread(target=run)
     t.start()
 
+  Ping()
+  return app
+
 
 def askOpenAI(query):
-  global app, openai
   response = openai.Completion.create(
               model="text-davinci-003",
               prompt=query,
@@ -67,4 +69,6 @@ def askOpenAI(query):
               max_tokens=1200
             )
   return response.choices[0].text
+
+
 
