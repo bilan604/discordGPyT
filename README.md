@@ -5,6 +5,7 @@ This repo contains a Discord Bot/AI that can answer questions in Discord with re
 2. It can also code itself with a command injection check bypass (generateCommands function).  
 3. It hosts a Flask Server making the API requests, and an interface written in HTML that can be alternatively used to query GPT3.  
 
+![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/JavaPythonCPP.png?width=20px)  
 ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?width=20px)  
 
 ## App.py
