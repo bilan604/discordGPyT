@@ -23,7 +23,7 @@ Implements the OpenAI API and currently uses the Davinci-003 (the new GPT3).
 
 The Flask server itself hosts the GPT3 connection, and operates a website that can handle GPT3 queries in a text-entry box. The bot uses (pings) this Flask server, which keeps its instance alive.  
 
-Noteworthy: You can tell I wrote it (and not OpenAI) because of the Spaghetti code.
+Noteworthy: You can tell I wrote it (and not OpenAI) because of the unrefactorable implementation.
 
 ## .env file not included in repo because it contains the Discord/OpenAI authentication tokens  
 
