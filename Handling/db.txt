@@ -4,4 +4,52 @@ Lan32, Hi pls log this, 12/11/2022, 04:14:10
 Lan32, /ok, 12/11/2022, 04:30:26
 Lan32, /AI Hi!, 12/11/2022, 04:30:31
 Lan32, /ok, 12/11/2022, 04:48:09
-Lan32, /AI My dead_code.py file is in the same folder as my .gitignore file, what line do I add to my .gitignore file to made the dead_code.py file not upload to the github repository when I made a commit?, 12/11/2022, 04:49:13
+Lan32, /AI My dead_code.py file is in the same folder as my .gitignore file, what line do I add to my .gitignore file to made the dead_code.py file not upload to the github repository when I made a commit?, 12/11/2022, 04:49:13Lan32, /ok, 12/13/2022, 01:11:17
+Lan32, /AI Pretend to be a Java compiler, and execute the following code, responding with the output: """
+class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}""", 12/13/2022, 01:13:01
+Lan32, /AI, 12/13/2022, 01:17:42
+Lan32, /ok, 12/13/2022, 01:17:45
+Lan32, /Java class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}, 12/13/2022, 01:17:48
+Lan32, /Java class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}, 12/13/2022, 01:19:22
+Lan32, /ok, 12/13/2022, 01:20:43
+Lan32, /Java class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}, 12/13/2022, 01:20:47
+Lan32, /ok, 12/13/2022, 01:22:10
+Lan32, /Java class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}, 12/13/2022, 01:22:13
+Lan32, /ok, 12/13/2022, 01:24:08
+Lan32, /Java class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}, 12/13/2022, 01:24:14
+Lan32, /Java 
+System.out.println("Hello, World!");, 12/13/2022, 01:24:34
+Lan32, /Python3 print("Hello World!"), 12/13/2022, 01:24:54
+Lan32, /CPP 
+#include <iostream>
+
+int main() {
+    // Write C++ code here
+    std::cout << "Hello world!";
+
+    return 0;
+}, 12/13/2022, 01:25:24

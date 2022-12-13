@@ -50,9 +50,9 @@ async def on_message(message: discord.Message):
     # "context determines the purpose of Statistical work"
     ctx = await bot.get_context(message)
 
-    # otherwise its just a message
-    global db
-    db.addMessage(message)
+    # otherwise log the message
+    #global db
+    #db.addMessage(message)
 
 
 """
@@ -200,6 +200,39 @@ async def generateCommands(ctx):
   await python(ctx, code)
   await ctx.send("Commands Added")
 
+
+"""
+#########################################################
+CODE:
+#########################################################
+"""
+
+@bot.command()
+async def Java(ctx, *, kwargs):
+  input = "Pretend to be a Java compiler, and execute the following code:\n \
+    \n "
+  input += kwargs
+  input += "\n\nOutput:\n"
+  response = askOpenAI(input)
+  await ctx.send(response)
+
+@bot.command()
+async def Python3(ctx, *, kwargs):
+  input = "Pretend to be a Python3 compiler, and execute the following code:\n \
+    \n "
+  input += kwargs
+  input += "\n\nOutput:\n"
+  response = askOpenAI(input)
+  await ctx.send(response)
+
+@bot.command()
+async def CPP(ctx, *, kwargs):
+  input = "Pretend to be a C++ compiler, and execute the following code:\n \
+    \n "
+  input += kwargs
+  input += "\n\nOutput:\n"
+  response = askOpenAI(input)
+  await ctx.send(response)
 
 """
 #########################################################

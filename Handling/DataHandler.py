@@ -46,7 +46,7 @@ class DB:
         row = [message.author.name, message.content, message.created_at.strftime("%m/%d/%Y, %H:%M:%S")]
         self.table[idx] = row
         self.logMessage(row)
-        print(self.table)
+
     
         
     
