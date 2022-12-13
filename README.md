@@ -7,7 +7,6 @@ This repo contains a Discord Bot/AI that can answer questions in Discord with re
 
 https://user-images.githubusercontent.com/77251582/207458277-081d419f-078e-45b7-ac70-b13433962d54.mp4
 
-![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/JavaPythonCPP.png?width=20x)  
 ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/Python-OpenAI.png?width=20px)  
 
 ## App.py
