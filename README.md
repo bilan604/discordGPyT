@@ -9,9 +9,12 @@ The bot:
 The flask server:
 While developing the Discord bot, I used to keep the bot online by making ping requests every five minutes to a Flask Server. The Flask Server is now used to make chatGPT API requests. Since I needed the Flask Server anyways, I implemented the chatGPT API into a small web application and wrote some JavaScript to add visual effects to the web app. As of now, the Flask Server is no longer needed.  
 
+## the bot creating and adding the /help command to itself
+## ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/generateCommands-Discord-AI.png?width=20px)  
+
+
 https://user-images.githubusercontent.com/77251582/207458277-081d419f-078e-45b7-ac70-b13433962d54.mp4
 
-![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/generateCommands-Discord-AI.png?width=20px)  
 
 ## App.py
 The bot and bot commands. Message sent in Discord chat beggining with "/" call bot commands.  
