@@ -37,10 +37,15 @@ body {
   max-width: 300px;
   color:white;
   border: 5px solid #10a37f;
-  padding: 50px 40px;
-  border-radius: 5px;
-  margin-left: 4%;
-  margin-bottom: 24%;
+  padding: 30px 30px;
+  border-radius: 1px;
+  margin-left: 5%;
+  margin-bottom: 8.5%;
+  user-select: none;
+}
+#tech-stack {
+  font-size: 14px;
+  color:white;
   user-select: none;
 }
 .icon {
@@ -94,6 +99,8 @@ input[type="submit"] {
   top: 50%;
   left: 50%;
   position: absolute;
+  padding: 15px 15px;
+  border-radius: 25px;
   background-color: black;
-  transform: translate(0%, -45%);
+  transform: translate(0%, -44%);
 }

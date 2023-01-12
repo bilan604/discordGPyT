@@ -9,30 +9,57 @@
 
   <div id="intro">
     <h1>Hi, I go by Bill!</h1>
-    <p>Heres a little bit about me, some things I enjoy learning,
-       and some things I am learning to do.</p>
+    <p>Heres a little bit about me - some things I've learned to enjoy,
+       and some things I enjoy learning.</p>
+    <ul id="tech-stack">
+      <li>1. Python</li>
+      <li>2. SQL</li>
+      <li>3. Java</li>
+      <li>4. HTML</li>
+      <li>5. CSS</li>
+      <li>6. JavaScript</li>
+      <li>7. C++</li>
+      <li>8. R</li>
+      <li>9. MATLAB</li>
+      <li>10. LaTeX</li>
+    </ul>
   </div>
   <div id="gallery">
     <div id="GPT3">
       <h3>OpenAI's chatGPT</h3>
       <form action="/" method="post">
-        <input type="text" name="query" placeholder="Enter Anything" required />
+        <input type="text" name="query" placeholder="Enter Anything" autocomplete="off" required />
+        <input type="text" name="query_test" placeholder="Enter Anything" autocomplete="off" required />
         <input type="submit" value="Generate output!" />
       </form>
-  {% if result %}
-    <div class="result">{{ result }}</div>
-    {% endif %}
-    </div>
+      
+      {% if result %}
+        <div class="result">{{ result }}</div>
+      {% endif %}
     
+    </div>
     <img class="image" src="static/sta160.png" draggable="false" unselectable="on" />
     <img class="image" src="static/CodeSignal-s2.png" draggable="false" unselectable="on" />
     <img class="image" src="static/CodeSignal-s3.png" draggable="false" unselectable="on" />
+    <img class="image" src="static/perservere.png" draggable="false" unselectable="on" />
     <img class="image" src="static/HackerRank-Python-Certification.png" draggable="false" unselectable="on" />
+    <img class="image" src="static/HackerRank-SQL-Certification-3.png" draggable="false" unselectable="on" />
+    <img class="image" src="static/HackerRank-SQL-Certification-2.png" draggable="false" unselectable="on" />
     <img class="image" src="static/HackerRank-SQL-Certification.png" draggable="false" unselectable="on" />
     <img class="image" src="static/HackerRank-Java-Certification.png" draggable="false" unselectable="on" />
     <img class="image" src="static/HackerRank-Problem-Solving-Certification.png" draggable="false" unselectable="on" />   
     </div>
 
+
+    <button type="button" onclick="addDiv(event)">Add random div to "div-box"</button>
+      <div id="div-box">
+        <div class="div-box-div">A div!</div>
+        {% if result_test %}
+        <div class="result_test">
+          {{ result_test }}
+        </div>
+        {% endif %}
+      </div>
 
     <script>
   
@@ -42,10 +69,9 @@
         posdiff = 100 * (e.clientX - gallery.startClick) / window.innerWidth;
         
         gallery.oldpos = posdiff + gallery.oldpos;
-        /*document.getElementById("test-display").innerHTML = "Up: " + posdiff + " AND "+ gallery.oldpos;*/
         gallery.animate(
-            {transform: 'translate(-' + Math.min(100, Math.max(0, gallery.oldpos)) +'%, -45%)'}, 
-            {duration: 1200, fill: 'forwards'}
+            {transform: 'translate(-' + Math.min(100, Math.max(0, gallery.oldpos)) +'%, -44%)'}, 
+            {duration: 800, fill: 'forwards'}
           );
       }
       
@@ -56,15 +82,12 @@
         }
         gallery.startClick = e.clientX;
         gallery.mousedown = 'true';
-      
-      
-      /*document.getElementById("test-display").innerHTML = "Down: " + gallery.oldpos;*/
       }
         
       function onMouseMove(e) {
         const gallery = document.getElementById("gallery");
         const dwindowratio = (e.clientX - gallery.startClick) / window.innerWidth;
-        const newratio = 100 * dwindowratio;
+        const newratio = 130 * dwindowratio;
         const newpos = newratio + gallery.oldpos;
         if (gallery.mousedown == "true") {
           gallery.animate(
@@ -72,7 +95,7 @@
             {duration: 1200, fill: 'forwards'}
           );
   
-          const np = Math.min(100, Math.max(0, (100-(1.3*newpos.toFixed(0)))));
+          const np = Math.min(100, Math.max(0, (100-(1.5*newpos.toFixed(0)))));
           const images = gallery.getElementsByClassName("image");
           for (let i = 0; i < images.length; i++) {
             images[i].animate(
@@ -84,17 +107,20 @@
       }
       
       function onMouseEnter(e) {
-        var element = document.getElementById("test-display");
-        element.innerHTML = "";
+        /*var element = document.getElementById("test-display");
+        element.innerHTML = "<div>Mouse Inside | Inside another div</div>";*/
       }
       
       function onMouseOut(e) {
-        document.getElementById("gallery").mousedown = 'false';
-        
-        var element = document.getElementById("test-display");
-        element.innerHTML = "";
+        /*var element = document.getElementById("test-display");
+        element.innerHTML = "Mouse Outside";*/
       }
-  
+      
+      function addDiv(e) {
+        var element = document.getElementById("div-box");
+        element.innerHTML += element.innerHTML;
+        alert(element.innerHTML)
+      }
     </script>
 
 

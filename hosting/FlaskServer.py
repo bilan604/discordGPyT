@@ -29,7 +29,7 @@ def OpenAIServer():
               model="text-davinci-002",  # 002
               prompt=generate_response(query),
               temperature=0.6,
-              max_tokens=50
+              max_tokens=850
           )
           print(f"{response.choices=}")
           return redirect(url_for("index", result=response.choices[0].text))
@@ -57,6 +57,7 @@ def OpenAIServer():
     t = Thread(target=run)
     t.start()
 
+  run()
   Ping()
   return app
 
@@ -68,6 +69,7 @@ def askOpenAI(query):
               temperature=0.6,
               max_tokens=1200
             )
+  print(response.choices[0].text)
   return response.choices[0].text
 
 

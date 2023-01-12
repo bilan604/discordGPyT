@@ -1,10 +1,10 @@
 import os
 import json
+import random
 import openai
 import discord
 from random import randint
 from discord.ext import commands
-from hosting.FlaskServer import OpenAIServer
 from hosting.FlaskServer import askOpenAI
 
 from handling.DataHandler import DB
@@ -132,6 +132,7 @@ async def executeCode(ctx, *, kwargs):
   global s, s1, s2
   global dd, dd1, dd2
   global lst, lst1, lst2
+  ans = ""
 
   code = kwargs
   exec(code)
@@ -173,7 +174,6 @@ async def dice(ctx):
 @bot.command()
 async def AI(ctx, *, kwargs):
   response = askOpenAI(kwargs)
-  print(response)
   await ctx.send(response)
 
 @bot.command()
@@ -308,10 +308,6 @@ async def commands(ctx):
     command_list = [command.name for command in bot.commands]
     await ctx.send('Commands: ' + ', '.join(command_list))
 
-
-global bot_commands
-bot_commands = {command.name: command for command in list(bot.commands)}
-
 @bot.command()
 async def invokeOK(ctx):
   for command in list(bot.commands):
@@ -319,45 +315,51 @@ async def invokeOK(ctx):
       await command.invoke(ctx)
 
 
-if __name__ == '__main__':
+global bot_commands
+bot_commands = {command.name: command for command in list(bot.commands)}
+
+
+def initializeWebApp(__name__):
+  from handling.chatGPT import generate_response
+
+  global db
   db = DB()
-  """
-  app = OpenAIServer()
-  """
-  #v2:
+
   global app
   app = Flask(__name__)
   openai.api_key = os.getenv("OPENAI_API_KEY")
-  
   print("App created!")
-  
-  empty_prompt = """{}"""
 
   @app.route("/", methods=("GET", "POST"))
   def index():
       if request.method == "POST":
-          query = request.form["query"]
-          response = openai.Completion.create(
-              model="text-davinci-002",  # 002
-              prompt=generate_response(query),
-              temperature=0.6,
-              max_tokens=50
-          )
-          print(f"{response.choices=}")
-          return redirect(url_for("index", result=response.choices[0].text))
-  
+        query = request.form["query"]
+        response = openai.Completion.create(
+            model="text-davinci-002",  # 002
+            prompt=generate_response(query),
+            temperature=0.6,
+            max_tokens=850
+        )
+        return redirect(url_for("index", result=response.choices[0].text))
+      result_test = "True"
       # "GET" request: Update the HTML page to display the response
-      result = request.args.get("result")  # pointer to HTML element to modify
-      return render_template("index.html", result=result)  # re-renders the element
-  
-  def generate_response(query):
-      return empty_prompt.format(
-          query.capitalize()
-      )
+      result_string = request.args.get("result")  # chatGPT's response
+      result_test = askOpenAI("write a div in HTML")
+      print(f" {result_test=} ")
+      # HTML will check if result_string is not null and if so, 
+      return render_template("index.html", result=result_string, result_test=result_test)  # re-renders the element
+
+  return app
+
+
+
+
+if __name__ == '__main__':
+  app = initializeWebApp(__name__)
   
   def run():
-    app.run()
     print("--Flask App run()--")
+    app.run()
   
   def Ping():
     '''
@@ -366,10 +368,9 @@ if __name__ == '__main__':
     t = Thread(target=run)
     t.start()
 
-  run()
-
-  ############
+  #run()
+  
+  # due to instancing issues, both can not be run at the same time
   bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
   bot.run(bot_token)
-  
 
