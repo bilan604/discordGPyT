@@ -25,12 +25,15 @@ def initializeWebApp(__name__):
             max_tokens=850
         )
         return redirect(url_for("index", result=response.choices[0].text))
-      result_test = "True"
+
       # "GET" request: Update the HTML page to display the response
-      result_string = request.args.get("result")  # chatGPT's response
-      result_test = askOpenAI("write a div in HTML")
-      print(f" {result_test=} ")
+      result = " "
+      
+      # make connect 4!
+      result_test = "Show ConnectFour"
+
+
       # HTML will check if result_string is not null and if so, 
-      return render_template("index.html", result=result_string, result_test=result_test)  # re-renders the element
+      return render_template("index.html", result=result, result_test=result_test)  # re-renders the element
 
   return appx
