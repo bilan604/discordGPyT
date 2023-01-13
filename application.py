@@ -315,9 +315,7 @@ global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}
 
 
-from threading import Thread 
-from functools import partial 
-from webApp import initializeWebApp
+
 
   
 def runApp(__name__):
