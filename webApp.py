@@ -30,8 +30,8 @@ def initializeWebApp(__name__):
       result = " "
       
       # make connect 4!
-      result_test = "Show ConnectFour"
-
+      #result_test = "Show ConnectFour"
+      result_test = "<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||0||_||_||_||_||</div>\n"+"<div>||x||0||x||_||_||_||_||</div>\n"+"<div>-----------------------</div>\n"+"<div>||0||1||2||3||4||5||6||</div>"
 
       # HTML will check if result_string is not null and if so, 
       return render_template("index.html", result=result, result_test=result_test)  # re-renders the element

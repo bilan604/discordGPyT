@@ -7,6 +7,10 @@ from random import randint
 from discord.ext import commands
 from hosting.FlaskServer import askOpenAI
 
+from threading import Thread 
+from functools import partial 
+from webApp import initializeWebApp
+
 from handling.DataHandler import DB
 from handling.utilities import convertWord
 from handling.utilities import checkCode
@@ -21,6 +25,9 @@ from threading import Thread
 from flask import Flask , request
 from flask import redirect
 from flask import render_template, url_for
+
+
+webApp = initializeWebApp(__name__)
 
 
 intents = discord.Intents(
@@ -40,13 +47,18 @@ bot = commands.Bot(
 )
 
 
-@bot.event 
+@bot.event
 async def on_ready():
-    print("@bot.event ready", bot.user, "\n")
+    # Could not get it to send anything on ready
+      # no ctx on ready
+    print(f"{bot.user.name} is online!")
+
 
 @bot.listen()
 async def on_message(message: discord.Message):
-    # if the message is from the bot itself
+    # This function is called every time a message is sent
+
+    # if author of message == the bot itself
     if message.author == bot.user:
       return
     
@@ -315,9 +327,7 @@ global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}
 
 
-from threading import Thread 
-from functools import partial 
-from webApp import initializeWebApp
+
 
   
 def runApp(__name__):
@@ -327,7 +337,6 @@ def runApp(__name__):
 if __name__ == '__main__':
   bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')  
   db = DB()
-  webApp = initializeWebApp(__name__)
   
   Thread(target=partial(bot.run, bot_token)).start()
   
