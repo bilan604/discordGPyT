@@ -32,7 +32,6 @@ intents.reactions = True
 command_prefix = "/"
 
 
-global bot
 bot = commands.Bot(
   intents=intents,
   author_id = 948372828292521984,
@@ -43,7 +42,6 @@ bot = commands.Bot(
 
 @bot.event 
 async def on_ready():
-    # Prints the bot's username and identifier
     print("@bot.event ready", bot.user, "\n")
 
 @bot.listen()
@@ -52,7 +50,6 @@ async def on_message(message: discord.Message):
     if message.author == bot.user:
       return
     
-    # "context determines the purpose of Statistical work"
     ctx = await bot.get_context(message)
 
     # otherwise log the message
@@ -184,7 +181,6 @@ async def python(ctx, s):
 async def runApp(ctx):
   global app
   app.run()
-  
   await ctx.send("App ran")
 
 
@@ -319,58 +315,28 @@ global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}
 
 
-def initializeWebApp(__name__):
-  from handling.chatGPT import generate_response
-
-  global db
-  db = DB()
-
-  global app
-  app = Flask(__name__)
-  openai.api_key = os.getenv("OPENAI_API_KEY")
-  print("App created!")
-
-  @app.route("/", methods=("GET", "POST"))
-  def index():
-      if request.method == "POST":
-        query = request.form["query"]
-        response = openai.Completion.create(
-            model="text-davinci-002",  # 002
-            prompt=generate_response(query),
-            temperature=0.6,
-            max_tokens=850
-        )
-        return redirect(url_for("index", result=response.choices[0].text))
-      result_test = "True"
-      # "GET" request: Update the HTML page to display the response
-      result_string = request.args.get("result")  # chatGPT's response
-      result_test = askOpenAI("write a div in HTML")
-      print(f" {result_test=} ")
-      # HTML will check if result_string is not null and if so, 
-      return render_template("index.html", result=result_string, result_test=result_test)  # re-renders the element
-
-  return app
 
 
 
+from threading import Thread 
+from functools import partial 
+from webApp import initializeWebApp
+
+  
+def runApp(__name__):
+  pass
+  
 
 if __name__ == '__main__':
-  app = initializeWebApp(__name__)
+  bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')  
+  db = DB()
+  webApp = initializeWebApp(__name__)
   
-  def run():
-    print("--Flask App run()--")
-    app.run()
+  Thread(target=partial(bot.run, bot_token)).start()
   
-  def Ping():
-    '''
-    Keeps the bot online by continueously pinging
-  	'''
-    t = Thread(target=run)
-    t.start()
-
-  #run()
+  webApp.run()
   
-  # due to instancing issues, both can not be run at the same time
-  bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
-  bot.run(bot_token)
+  
+  
+  
 
