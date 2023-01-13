@@ -34,7 +34,9 @@
       </form>
       
       {% if result %}
-        <div class="result">{{ result }}</div>
+        <div class="result">
+          {{ result }}
+        </div>
       {% endif %}
     
     </div>
@@ -50,19 +52,44 @@
     <img class="image" src="static/HackerRank-Problem-Solving-Certification.png" draggable="false" unselectable="on" />   
     </div>
 
-
-    <button type="button" onclick="addDiv(event)">Add random div to "div-box"</button>
       <div id="div-box">
-        <div class="div-box-div">A div!</div>
         {% if result_test %}
-        <div class="result_test">
-          {{ result_test }}
-        </div>
+          <div id="result_test">
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>||_||_||_||_||_||_||_||</div>
+            <div>-----------------------</div>
+            <div>||0||1||2||3||4||5||6||</div>
+          </div>
         {% endif %}
+        <button type="button" onclick="refreshTest(event)">refreshTest()"</button>
       </div>
 
     <script>
-  
+      
+
+
+      function refreshTest(e) {
+        var java = require('java');
+        var javaLangSystem = java.import('java.lang.System');
+
+        var game = java.import('games.ConnectFour');
+        
+        /*var newInnerHTML = "<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||_||_||_||_||_||</div>\n"+"<div>||_||_||0||_||_||_||_||</div>\n"+"<div>||x||0||x||_||_||_||_||</div>\n"+"<div>-----------------------</div>\n"+"<div>||0||1||2||3||4||5||6||</div>";*/
+        var newInnerHTML = game.getBoard();
+        alert("This is it?");
+        alert(newInnerHTML);
+        game.makeValidMove(true, "X");
+        resultTest.innerHTML = newInnerHTML;
+        
+        var resultTest = document.getElementById("result_test");
+        
+      }
+
+
       function onMouseUp(e) {
         var gallery = document.getElementById("gallery");
         gallery.mousedown = 'false';
@@ -118,8 +145,7 @@
       
       function addDiv(e) {
         var element = document.getElementById("div-box");
-        element.innerHTML += element.innerHTML;
-        alert(element.innerHTML)
+        element.innerHTML = element.innerHTML;
       }
     </script>
 
