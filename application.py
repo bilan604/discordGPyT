@@ -5,7 +5,10 @@ import openai
 import discord
 from random import randint
 from discord.ext import commands
-from hosting.FlaskServer import askOpenAI
+
+from threading import Thread 
+from functools import partial 
+from hosting.webApp import initializeWebApp
 
 from handling.DataHandler import DB
 from handling.utilities import convertWord
@@ -21,6 +24,11 @@ from threading import Thread
 from flask import Flask , request
 from flask import redirect
 from flask import render_template, url_for
+
+
+from hosting.webApp import initializeWebApp
+# to allow string innerHTML
+from flask import Markup
 
 
 intents = discord.Intents(
@@ -315,9 +323,6 @@ global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}
 
 
-
-
-  
 def runApp(__name__):
   pass
   
