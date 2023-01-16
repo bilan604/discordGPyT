@@ -5,7 +5,6 @@
 </head>
 
 <body onmousedown="onMouseDown(event)" onmouseup="onMouseUp(event)" onmousedown="onMouseDown(event)" onmousemove="onMouseMove(event)" onmouseout="onMouseOut(event)" onmouseenter ="onMouseEnter(event)">
-  
 
   <div id="intro">
     <h1>Hi, I go by Bill!</h1>
@@ -24,12 +23,20 @@
       <li>10. LaTeX</li>
     </ul>
   </div>
+
+  <div id="result_test">
+    {{result_test}}
+    <form>
+      <div><input type="text_test" name="query_test" placeholder="Enter a column" autocomplete="off" required /></div>
+      <div><input type="submit_test" value="Place!" /></div>      
+    </form>
+  </div>
+
   <div id="gallery">
     <div id="GPT3">
       <h3>OpenAI's chatGPT</h3>
       <form action="/" method="post">
         <input type="text" name="query" placeholder="Enter Anything" autocomplete="off" required />
-        <input type="text" name="query_test" placeholder="Enter Anything" autocomplete="off" required />
         <input type="submit" value="Generate output!" />
       </form>
       
@@ -38,6 +45,7 @@
           {{ result }}
         </div>
       {% endif %}
+      
     
     </div>
     <img class="image" src="static/sta160.png" draggable="false" unselectable="on" />
@@ -53,10 +61,6 @@
     </div>
 
 
-        {% if result_test %}
-          <div id="result_test">
-            {{ result_test }}
-          </div>
-        {% endif %}
-        <button type="button" onclick="refreshTest(event)">refreshTest()"</button>
+
+
 </body>
