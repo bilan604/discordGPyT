@@ -66,11 +66,21 @@ def askOpenAI(query):
   response = openai.Completion.create(
               model="text-davinci-003",
               prompt=query,
-              temperature=0.6,
+              temperature=0.7,
               max_tokens=1200
             )
   print(response.choices[0].text)
+  print(response.choices)
   return response.choices[0].text
 
-
+def askOpenAIPlus(query):
+  response = openai.Completion.create(
+              model="text-davinci-003",
+              prompt=query,
+              temperature=0.7,
+              max_tokens=2200
+            )
+  print(response.choices[0].text)
+  print(response.choices)
+  return response.choices[0].text
 

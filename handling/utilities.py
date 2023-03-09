@@ -27,4 +27,22 @@ def checkCode(code):
       newCode.append(s_declare + "\n")
   code = "".join(newCode + code)
   return code
-      
+
+def isQuestion(s):
+  s = s.lower()
+  conditions = ("what", "how", "where", "when", "why", "who", "?")
+  for cond in conditions:
+    if cond in s:
+      return True
+  return False
+
+def parseResponse(response):
+  if len(response) < 2000:
+    return response, ""
+  for i in range(len(response)-1,-1,-1):
+    if response[i] == " ":
+      a,b = response[:i], response[i:]
+      if len(b > 0):
+        return a,b[1:]
+      return a,b
+  return response[:2000], response[2000:]

@@ -19,10 +19,10 @@ def initializeWebApp(__name__):
       if request.method == "POST":
         query = request.form["query"]
         response = openai.Completion.create(
-            model="text-davinci-002",  # 002
+            model="text-davinci-003",  # 002
             prompt=generate_response(query),
-            temperature=0.6,
-            max_tokens=850
+            temperature=0.7,
+            max_tokens=2000
         )
         return redirect(url_for("index", result=response.choices[0].text))
 
@@ -37,3 +37,4 @@ def initializeWebApp(__name__):
       return render_template("index.html", result=result, result_test=result_test)  # re-renders the element
 
   return appx
+

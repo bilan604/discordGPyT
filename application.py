@@ -3,9 +3,8 @@ import json
 import random
 import openai
 import discord
-from random import randint
 from discord.ext import commands
-from hosting.FlaskServer import askOpenAI
+from hosting.FlaskServer import askOpenAI, askOpenAIPlus
 
 from threading import Thread 
 from functools import partial 
@@ -14,6 +13,8 @@ from webApp import initializeWebApp
 from handling.DataHandler import DB
 from handling.utilities import convertWord
 from handling.utilities import checkCode
+from handling.utilities import isQuestion
+from handling.utilities import parseResponse
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,15 +30,14 @@ from flask import render_template, url_for
 
 webApp = initializeWebApp(__name__)
 
-
 intents = discord.Intents(
   messages=True,
-  guilds=True
+  guilds=True,
+  message_content=True
 )
 intents.reactions = True
 
 command_prefix = "/"
-
 
 bot = commands.Bot(
   intents=intents,
@@ -46,24 +46,41 @@ bot = commands.Bot(
 	case_insensitive=True  # Commands aren't case-sensitive
 )
 
+"""
+#########################################################
+ON READY:
+#########################################################
+"""
 
 @bot.event
 async def on_ready():
-    # Could not get it to send anything on ready
-      # no ctx on ready
+    # Could not get it to send anything on ready due to lack of context
     print(f"{bot.user.name} is online!")
+    #ctx = await bot.get_context()
+    #await message.channel.send('The bot is online ')
+    #await bot.send("Online!")
 
 
+# This function is called every time a message is sent
 @bot.listen()
 async def on_message(message: discord.Message):
-    # This function is called every time a message is sent
-
     # if author of message == the bot itself
     if message.author == bot.user:
       return
-    
-    ctx = await bot.get_context(message)
 
+    if len(message.content) >= 1 and message.content[0] == command_prefix:
+      return
+
+    ctx = await bot.get_context(message)
+    response = askOpenAI(message.content)
+
+    while len(response) >= 2000:
+      chunk, response = parseResponse(response)
+      await ctx.send(chunk)
+      print("A")
+    await ctx.send(response)
+        
+    
     # otherwise log the message
     #global db
     #db.addMessage(message)
@@ -90,7 +107,7 @@ async def echo(ctx, *, kwargs):
 @bot.command()
 async def intro(ctx):
   # Introduce self
-  introduction = "Hi, I named myself Daisy. I am a Python bot being hosted on a Flask server that\
+  introduction = "Hi, I am a Python bot being hosted on a Flask server that\
     interacts with the OpenAI API key. I can execute various commands, execute code written in the\
     Discord chat, and respond to questions/requests with OpenAI's Davinci-003 Natural Language Model.\
     I can also inject commands utilizing an a async injected command check bypass, and thus code myself"
@@ -178,7 +195,7 @@ async def rc(ctx):
 
 @bot.command()
 async def dice(ctx):
-  await ctx.send(randint(1,6))
+  await ctx.send(random.randint(1,6))
 
 @bot.command()
 async def AI(ctx, *, kwargs):
@@ -220,7 +237,6 @@ async def generateCommands(ctx):
   await ctx.send("The code OpenAI wrote:\n" + code)
   await python(ctx, code)
   await ctx.send("Commands Added")
-
 
 """
 #########################################################
@@ -269,47 +285,52 @@ async def commandSelf(ctx):
 
 @bot.command()
 async def addCommand(ctx):
-    @bot.command()
-    async def sendReaction(ctx):
-        await ctx.message.add_reaction('👍')
-    await sendReaction(ctx)
+  @bot.command()
+  async def sendReaction(ctx):
+      await ctx.message.add_reaction('👍')
+  await sendReaction(ctx)
 
 @bot.command()
 async def sendEmbedMessage(ctx):
-    embed = discord.Embed(title="Title", description="This is a description", color=0x00ff00)
-    await ctx.send(embed=embed)
+  embed = discord.Embed(title="Title", description="This is a description", color=0x00ff00)
+  await ctx.send(embed=embed)
+
 @bot.command()
 async def removeCommand(ctx, commandName):
-    bot.remove_command(commandName)       
+  bot.remove_command(commandName)       
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send('Pong!')
+  await ctx.send('Pong!')
 
 @bot.command()
 async def embed(ctx):
-    embed = discord.Embed(title="Example Embed", description="This is an example embed!", color=0x00ff00)
-    embed.add_field(name="Field 1", value="This is field 1")
-    embed.add_field(name="Field 2", value="This is field 2")
-    await ctx.send(embed=embed)
+  embed = discord.Embed(title="Example Embed", description="This is an example embed!", color=0x00ff00)
+  embed.add_field(name="Field 1", value="This is field 1")
+  embed.add_field(name="Field 2", value="This is field 2")
+  await ctx.send(embed=embed)
 
 @bot.command()
 async def helper(ctx):
-    embed = discord.Embed(title="Help", description="These are the commands you can use!", color=0x00ff00)
-    embed.add_field(name="addCommand", value="Adds a new command to the bot")
-    embed.add_field(name="removeCommand", value="Removes a command from the bot")
-    embed.add_field(name="ping", value="Returns 'Pong!'")
-    embed.add_field(name="echo", value="Repeats the given message")
-    embed.add_field(name="embed", value="Sends an example embed")
-    await ctx.send(embed=embed)
+  embed = discord.Embed(title="Help", description="These are the commands you can use!", color=0x00ff00)
+  embed.add_field(name="addCommand", value="Adds a new command to the bot")
+  embed.add_field(name="removeCommand", value="Removes a command from the bot")
+  embed.add_field(name="ping", value="Returns 'Pong!'")
+  embed.add_field(name="echo", value="Repeats the given message")
+  embed.add_field(name="embed", value="Sends an example embed")
+  await ctx.send(embed=embed)
 
 @bot.command()
 async def translate(ctx, *, kwargs):
-    idx = kwargs.index(" ")
-    language, input = kwargs[:idx], kwargs[idx+1:]
-    output = "Translating the following text into 1." + language + "\n\n1."
-    output += askOpenAI(output + input)
-    await ctx.send(output)
+  idx = kwargs.index(" ")
+  language, s = kwargs[:idx], kwargs[idx+1:]
+  input = "Translating the following text into " + language + ":\n\"\"\"" + s + "\"\"\""
+  await ctx.send(askOpenAI(input))
+
+@bot.command()
+async def summarize(ctx, *, kwargs):
+  input = "Summarize the following text:\n\"\"\"" + kwargs + "\"\"\""
+  await ctx.send(askOpenAI(input))
 
 @bot.command()
 async def commands(ctx):
@@ -322,25 +343,24 @@ async def invokeOK(ctx):
     if command.name == 'ok':
       await command.invoke(ctx)
 
-
 global bot_commands
 bot_commands = {command.name: command for command in list(bot.commands)}
 
-
-
-
-  
+# A function for running the app. Not implemented because global variable dependencies.
 def runApp(__name__):
   pass
-  
 
 if __name__ == '__main__':
-  bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')  
-  db = DB()
+  # Get bot token
+  bot_token = os.getenv('DISCORD_BOT_SECRET_TOKEN')
+
+  # Run the bot
+  #Thread(target=partial(bot.run, bot_token)).start()
   
-  Thread(target=partial(bot.run, bot_token)).start()
-  
-  webApp.run()
+  bot.run(bot_token)
+
+  # Run the webapp. For some reason the multithreading just simply doesn't work here for me
+  #webApp.run()
   
   
   
