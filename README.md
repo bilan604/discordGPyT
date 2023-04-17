@@ -1,5 +1,7 @@
 # OpenAI-discord-autobot
 
+A completely different, newer version of the bot has been made. It has been refactored to a class.
+
 This repo contains a Discord Bot/AI implements the chatGPT API for various functions. The Discord bot started as a bot that could act as a compiler through Discord chat, and throughout its development, I discovered a command injection vulnerability (seriously). The bot used to be able to code itself with this command injection bypass, but the developers have since fixed this issue/feature (breaking the functions that allowed the bot to add code to itself).
 
 The bot:
