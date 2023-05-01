@@ -2,9 +2,9 @@
 
 ## ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/SeaTurtlePNG.png?width=20px)  
 
-## You will need your own API tokens from OpenAI and Discord to run this
+Note: You will need your own API tokens from OpenAI and Discord to run this
 
-## the bot creating and adding the /help command to itself
+## The bot creating and adding the /help command to itself
 ## ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/generateCommands-Discord-AI.png?width=20px)  
 
 https://user-images.githubusercontent.com/77251582/207458277-081d419f-078e-45b7-ac70-b13433962d54.mp4
