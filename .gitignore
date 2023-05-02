@@ -1,4 +1,9 @@
 /.env
+
+__pycache__/.
+hosting/__pycache__/.
+
+
 dead_code.py
 __pycache__.py
 *.txt
