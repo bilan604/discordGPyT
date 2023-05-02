@@ -30,19 +30,8 @@ def initializeWebApp(__name__):
         """
         response = "Your query was: " + query
         return redirect(url_for("index", result=response.choices[0].text))
-
-      result = " "
-      
-      s = ['||_||_||_||_||_||_||_||', '||_||_||_||_||_||_||_||', '||_||_||_||_||_||_||_||', '||_||_||_||_||_||_||_||', '||_||_||0||_||_||_||_||', '||x||0||x||_||_||_||_||', '-----------------------']
-      prompt = "This is a representation of a Connect Four:\n"
-      prompt += "\n".join(s) + "\n"
-      prompt += "It is your turn, you are 0, modify the checkerboard so that you have played a move."
-      response = askOpenAI(prompt)
-
-      result_test = ["<div>" + row + "</div>" for row in response.split("\n")]
-      result_test = "".join(result_test)
-
-      result_test = Markup(result_test)
+      else:
+        result, result_test = "", ""
       return render_template("index.html", result=result, result_test=result_test)  # re-renders the element
 
 

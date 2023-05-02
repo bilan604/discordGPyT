@@ -8,9 +8,8 @@ from hosting.FlaskServer import askOpenAI, askOpenAIPlus
 
 from threading import Thread 
 from functools import partial 
-from webApp import initializeWebApp
+from old_bot_html.webApp import initializeWebApp
 
-from handling.DataHandler import DB
 from handling.utilities import convertWord
 from handling.utilities import checkCode
 from handling.utilities import isQuestion
