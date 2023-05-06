@@ -1,4 +1,4 @@
-# A completely different, newer version of the bot has been made. It has been refactored to a class and can do cool things like summarize youtube videos. https://replit.com/@Xing-YangYang1/discordGPT?v=1  
+# A completely different, newer version of the bot has been made for replit ide integration, and this repo needs to be refactored. The bot is not a class object where the bot instantiation and commands are defined within a class method. I am adding new features like summarizing youtube videos. https://replit.com/@Xing-YangYang1/discordGPT?v=1  
 
 ## ![screenshot](https://github.com/bilan604/OpenAI-Discord-autobot/blob/master/static/SeaTurtlePNG.png?width=20px)  
 
