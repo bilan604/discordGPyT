@@ -1,4 +1,8 @@
 /.env
+/.vscode
+
+old_bot_html
+static
 
 __pycache__/.
 hosting/__pycache__/.
@@ -6,4 +10,8 @@ hosting/__pycache__/.
 
 dead_code.py
 __pycache__.py
+
 *.txt
+/.txt
+*.exe
+
