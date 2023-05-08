@@ -1,14 +1,10 @@
-/.env
-/.cache
-
-
-development-cache
-helpers
-static
-
 /__pycache__
+/.cache
+/.config
+/.upm
 
+/helpers
+/development-cache
+venv/
 
-*.txt
-*.exe
-
+/.env
