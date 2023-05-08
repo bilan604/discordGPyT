@@ -6,7 +6,7 @@ development-cache
 helpers
 static
 
-__pycache__
+/__pycache__
 
 
 *.txt
