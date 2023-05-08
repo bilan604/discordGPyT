@@ -1,17 +1,14 @@
 /.env
-/.vscode
+/.cache
 
-old_bot_html
+
+development-cache
+helpers
 static
 
-__pycache__/.
-hosting/__pycache__/.
+__pycache__
 
-
-dead_code.py
-__pycache__.py
 
 *.txt
-/.txt
 *.exe
 

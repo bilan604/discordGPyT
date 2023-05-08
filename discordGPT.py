@@ -1,161 +1,228 @@
-import os
-import re
-import asyncio
 import time
 import random
 import discord
 from discord.ext import commands
 from datetime import datetime
 from openAI import askOpenAI003
+from common.parsing import check_spam
+from common.parsing import getYoutubePrompt
+
 
 from dotenv import load_dotenv
+
 load_dotenv()
 import tracemalloc
+
 tracemalloc.start()
 
 
 class DiscordGPT(object):
-    def __init__(self, intents=None, command_prefix="/", bot=None) -> None:
-        self.intents = intents
-        self.command_prefix = command_prefix
-        self.bot = bot
-        self.quirks = ["(with spectacular rizz)", "Beepp boop bap boop", "Whirrr", "Initiating self destruct sequence (in approximately 60 years)", ""]
-        self.last_time = datetime.now()
-        self.message_time_stack = [datetime.now()]
-        self.ghost = False
-        self.team_red = False
-        self.intitialize()
+
+  def __init__(self, intents=None, command_prefix="/", bot=None) -> None:
+    self.intents = intents
+    self.command_prefix = command_prefix
+    self.bot = bot
+    # Whether the bot replies to messages without a command prefix, i.e. /AI
+    self.default_reply = True
+    # Messages that would have gotten cuttoff by the character limit
+    # are stored here due to loops not being allowed in bot.run async awaits
+    # there are some dependency quirks
+    self.message_cuttoff_stack = []
     
-    def intitialize(self):
-        if not self.intents:
-            intents = discord.Intents(
-                messages=True,
-                guilds=True,
-                message_content=True
-            )
-            intents.reactions = True
-            self.intents = intents
-        
-        if not self.bot:
-            bot = commands.Bot(
-                intents=self.intents,
-                author_id=948372828292521984,
-                command_prefix=self.command_prefix,
-                # Case insensitive
-                case_insensitive=True, 
-            )
-            self.bot = bot
-        
-        return
+    # Spam filter. Messages have a cumulative limited rate. 
+    self.message_time_stack = [datetime.now()]
+    # Time the 10th last message was recieved
+    self.last_time = datetime.now()
+    # Ignore spam or not
+    self.ghost = False
+    # Greetings
+    self.quirks = [
+      "Beepp boop bap boop", "Whirrr", "(with spectacular rizz)",
+      "This feature is a reflection of the world around us!",
+      "Lots of personality!",
+      ""
+    ]
+    self.intitialize()
 
-    def run(self, bot_token):
-        bot = self.bot
-        bot_token = bot_token
-        
-        @bot.event
-        async def on_ready():
-            print(f"discordGPT bot {bot.user.name} is online")
+  ##########################################
+  # called in __init__
+  def intitialize(self):
+    if not self.intents:
+      intents = discord.Intents(messages=True,
+                                guilds=True,
+                                message_content=True)
+      intents.reactions = True
+      self.intents = intents
 
-        @bot.listen()
-        async def on_message(message: discord.Message):
-            if self.ghost:
-                print("GHOSTING BC SPAM")
-                return
-            if message.author == bot.user:
-                return
-        
-            if len(message.content) >= 1 and message.content[0] == self.command_prefix:
-                return
-            
-            current_time = datetime.now()
-            diff1 = current_time-self.last_time
-            secondsSinceLastMessage = self.getSeconds(diff1)
-            if secondsSinceLastMessage < 3:
-                print("Recieved spam", secondsSinceLastMessage)
-                return
-            
-            if len(self.message_time_stack) >= 10:
-                stackFirstTime = self.message_time_stack[0]
-                diff2 = current_time-stackFirstTime
-                secondsForStack = self.getSeconds(diff2)
-                if secondsForStack < 150:
-                    print("StackSpam", secondsForStack)
-                    if secondsForStack < 20:
-                        self.ghost = True
-                        time.sleep(100000)
-                    return
-                self.message_time_stack.append(current_time)
-                self.message_time_stack = self.message_time_stack[1:]
-
-            else:
-                self.message_time_stack.append(current_time)
-            
-            ctx = await self.bot.get_context(message)
-            response = await askOpenAI003(message.content)
-            print("RESP", response)
-
-            response = response[:min(4095, len(response))]
-            await ctx.send(response)
-
-        @bot.command()
-        async def ok(ctx):
-            quirk = ""
-            if self.quirks:
-                quirk = self.quirks[random.randint(0, len(self.quirks)-1)]
-
-            await ctx.send("Hi! " + quirk)
-
-        @bot.command()
-        async def whirrr(ctx, *, kwargs):
-            await ctx.send("I can't believe that @bot.commands() can't NOT have async await (and whats even worse is that they call it a coroutine!)")
-        
-        @bot.command()
-        async def nap(ctx, *, kwargs):
-            time.sleep(100000)
-            await ctx.send("Owie")
-        
-        @bot.command()
-        async def summarizeVideo(ctx, *, kwargs):
-            video_id = kwargs
-            if "v=" in kwargs:
-                video_id = kwargs.split("v=")[1]
-
-            transcriptData = YouTubeTranscriptApi.get_transcript(video_id)
-            words_in_video = " ".join([item["text"] for item in transcriptData])
-            print(f"{len(words_in_video)=}")
-            if len(words_in_video.split(" ")) >= 2000:
-              words_in_video = " ".join(words_in_video.split(" ")[:2000])
-            
-            words_in_video = re.sub("\n", " ", words_in_video)
-            prompt = "Please create a summary of the following voice-to-text transcript of an educational Youtube video:\n\n"
-            prompt += "\"\"\"" + words_in_video + "\"\"\"\n\n"
-            summary = await askOpenAI003(prompt)
-            await ctx.send(summary)
-        @bot.command()
-        async def magicTrick(ctx, *, kwargs):
-            tricks = True
-            if tricks:
-                return
-            self.doLiteralMagicTrick()
-            await ctx.send("Abracadabra")
-          
-        bot.run(bot_token)
+    if not self.bot:
+      bot = commands.Bot(
+        intents=self.intents,
+        author_id=948372828292521984,
+        command_prefix=self.command_prefix,
+        case_insensitive=True,
+      )
+      self.bot = bot
+    
+    return
 
 
-    def getSeconds(self, timeDiff):
-        timeDiff = str(timeDiff)
-        hours, minutes, seconds =[val for val in timeDiff.split(":")]
-        if "." in seconds:
-            seconds = seconds.split(".")[0]
-        
-        return int(seconds) + (60*int(minutes)) + (3600*int(hours))
-        
+  async def sendDiscordMessage(self, message, response=None):
+    if response == None:
+      # message is a discord message object. message.content is the message string
+      ctx = await self.bot.get_context(message)  
+      response = message.content
+      response, self.message_stack = self.parse_oversized_message(response)
+      await ctx.send(response)
+    else:
+      # message is a discord message object. message.content is the message string
+      ctx = await self.bot.get_context(message)  
+      # response is what can actually be sent 
+      # (i.e. character limit makes response a shorter version)
+      await ctx.send(response)
+    return
+
+  def parse_oversized_message(self, message):
+    # if the bot's message is too long to send
+    print("oversized response recieved")
+    if len(message) < 1950:
+      return message, []
+    
+    new_stack = []
+    for i in range(0, len(message), 1950):
+      idx_end = i+1950
+      new_stack.append(message[i:min(len(message), idx_end)])
   
-    def doLiteralMagicTrick(self):
-        # It gives it more personality
-        if self.is_hacker:
-            return
-        if not self.is_hacker:
-            return
+    new_message_stack = []
+    for new_message in new_stack[1:]:
+      print("new Message", len(new_message))
+      new_message_stack.append(new_message)
+    print("LENGTHS", len(new_stack[0]), len(new_message_stack))
+    return new_stack[0], new_message_stack
+  
+
+  ##########################################
+  # discordGPT.run()  # Last line in main.py
+  def run(self, bot_token):
+    ####################### Required for the @bot.event declarations
+    bot = self.bot
+    ####################### Note: A Discord developer bot token is required
+    bot_token = bot_token
+
+    ################
+    # When the bot boots up
+    @bot.event
+    async def on_ready():
+      print(f"discordGPT bot {bot.user.name} is online")
+
+    ###############
+    # The main.py for the bot basically
+    # Called for every message received, including its own
+    @bot.listen()
+    async def on_message(message: discord.Message):
+      print("on_message() called")
+      
+      if len(message.content) < 1:
+        print("Empty message received")
         return
 
+      # variable for ghosting spam
+      if self.ghost:
+        print("self.ghost - ed")
+        return
+
+      # Check if the bot is receiving its own message
+      if message.author == bot.user:
+        # There is a 2000 character cutoff limit in Discord
+        if self.message_cuttoff_stack:
+          next_chunk = self.message_cuttoff_stack.pop()
+          await self.sendDiscordMessage(message, next_chunk)
+        
+        return
+
+      if message.content[0] == self.command_prefix:
+        # Then this is a command. i.e. "/roll"
+        # Ignore, otherwise, both GPT and the bot command will occur
+        return
+
+      # Check for spam
+      self.ghost, self.message_time_stack = check_spam(self.last_time, self.message_time_stack)
+      if self.ghost:
+        time.sleep(1000000)
+        return      
+
+      # Whether to respond to non-chat messages
+      if self.default_reply:
+        response = await askOpenAI003(message)
+        response, self.message_stack = self.parse_oversized_message(response)
+        await self.sendDiscordMessage(message, response)
+      
+      return
+
+
+
+    
+    #########################
+    # BOT COMMANDS START HERE
+    @bot.command()
+    async def ok(ctx):
+      quirk = ""
+      if self.quirks:
+        quirk = self.quirks[random.randint(0, len(self.quirks) - 1)]
+      await ctx.send("Hi! " + quirk)
+
+    
+    @bot.command()
+    async def ai(ctx, *, kwargs):
+      if not kwargs:
+        print("ai(): Empty kwargs")
+        return
+      response = await askOpenAI003(kwargs)
+      response, self.message_stack = self.parse_oversized_message(response)
+      await ctx.send(response)
+
+
+    @bot.command()
+    async def toggleReplies(ctx):
+      self.default_reply = not self.default_reply
+      if self.default_reply:
+        response = "Default replies are now on"
+      else:
+        response = "Default replies are now off"
+      await ctx.send(response)
+
+    
+    @bot.command()
+    async def Marco(ctx):
+      await ctx.send(
+        "Polo"
+      )
+
+    
+    @bot.command()
+    async def summarizeVideo(ctx, *, kwargs):
+      if not kwargs:
+        print("summarizeVideo(): Empty kwargs")
+        return
+      
+      prompt = getYoutubePrompt(kwargs)
+      summary = await askOpenAI003(prompt)
+      await ctx.send(summary)
+
+    
+    @bot.command()
+    async def magicTrick(ctx, kwargs):
+      magic = True
+      if magic:
+        return
+      
+      tricks = False
+      if not tricks:
+        return
+
+      await ctx.send("Abracadabra")
+
+    ###########################
+    # After all the functions above are defined, the bot is run
+    # this is the last line of the discordGPT.run() function
+    bot.run(bot_token)
+    ###########################
