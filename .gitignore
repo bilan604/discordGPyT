@@ -1,9 +1,10 @@
-**/__pycache__/
-venv/
 .cache/
 .config
 .upm
-
+/__pycache__/
+*/__pycache__/
+**/__pycache__/
+venv/
 /helpers
 /development-cache
 /.env
